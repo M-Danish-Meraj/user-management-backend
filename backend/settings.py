@@ -171,3 +171,11 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.up.railway.app',  # Added for Railway domains
     "https://user-managementt.vercel.app"
 ]
+
+# === CROSS-SITE SESSION COOKIE SETTINGS (REQUIRED FOR VERCEL + RAILWAY) ===
+SESSION_COOKIE_SECURE = True          # Only send cookie over HTTPS (required in prod)
+SESSION_COOKIE_SAMESITE = 'None'      # Allow cookie to be sent cross-site
+SESSION_COOKIE_HTTPONLY = True        # Keep default (good security)
+
+CSRF_COOKIE_SECURE = True             # CSRF cookie also needs this
+CSRF_COOKIE_SAMESITE = 'None'         # Same for CSRF (even if you're exempting it)

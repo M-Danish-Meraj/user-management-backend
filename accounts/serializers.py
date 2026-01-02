@@ -73,7 +73,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # Safely extract optional fields
         department = validated_data.pop('department', '')
-        purse_number = validated_data.pop('purse_number', '')
+        purse_number = validated_data.pop('purse_number', None)
 
         # Create user with required fields
         user = User.objects.create_user(

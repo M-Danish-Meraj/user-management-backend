@@ -1,11 +1,21 @@
 from .models import User
 from rest_framework import serializers
 
+# class UserSerializer(serializers.ModelSerializer):
+#     permissions = serializers.SerializerMethodField()
+#     class Meta:
+#         model = User
+#         fields = ['id', 'email', 'name', 'role', 'created_at', 'permissions']
+#     def get_permissions(self, user):
+#         return list(user.userpermission_set.values_list("permission__code", flat=True))
 class UserSerializer(serializers.ModelSerializer):
     permissions = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ['id', 'email', 'name', 'role', 'created_at', 'permissions']
+        fields = ['id', 'email', 'name', 'role', 'created_at', 'permissions', 'department', 'purse_number']
+        # Add these two fields ↑
+    
     def get_permissions(self, user):
         return list(user.userpermission_set.values_list("permission__code", flat=True))
 

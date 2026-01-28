@@ -54,11 +54,21 @@ class SomeProtectedView(APIView):
             return Response(status=403)
         return Response({"data": "allowed"})
     
+# class UserListView(APIView):
+#     permission_classes = [IsAuthenticated]
+#     def get(self, request):
+#         if not has_permission(request.user, "can_view_users"):
+#             return Response({"detail": "Forbidden"}, status=403)
+#         users = User.objects.all()
+#         serializer = UserSerializer(users, many=True)
+#         return Response(serializer.data)
+
+from rest_framework.permissions import AllowAny
+
 class UserListView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]  # ← anyone can access this endpoint
+
     def get(self, request):
-        if not has_permission(request.user, "can_view_users"):
-            return Response({"detail": "Forbidden"}, status=403)
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)

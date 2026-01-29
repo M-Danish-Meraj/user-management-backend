@@ -1,6 +1,7 @@
 """
 Django settings for backend project.
 Updated for Railway Deployment + Vercel Frontend
+Final Clean Version
 """
 
 import os
@@ -18,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-default-key-change-in-prod')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# Railway par ye automatic False ho jayega agar aapne DEBUG variable set nahi kiya
+# Railway par ye automatic False ho jayega
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*']
@@ -41,9 +42,9 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = 'accounts.User'
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # Sabse upar hona chahiye
+    'corsheaders.middleware.CorsMiddleware',  # Sabse upar
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Static files ke liye zaroori
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -81,17 +82,26 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
+# --- DATABASE SETTINGS START ---
+# Pehle database config load karein
+db_config = dj_database_url.config(
+    default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
+    conn_max_age=600
+)
 
-# Database
-# Ye configuration Railway aur Local dono jagah chalegi
+# Agar config khali hai ya Engine nahi mila, toh SQLite use karein
+if not db_config or 'ENGINE' not in db_config:
+    print("⚠️ WARNING: Using SQLite fallback.")
+    db_config = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+
+# Finally DATABASES variable set karein
 DATABASES = {
-    'default': dj_database_url.config(
-        # Agar Railway ka URL nahi mila, toh Local SQLite use hoga
-        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
-        conn_max_age=600
-    )
+    'default': db_config
 }
-
+# --- DATABASE SETTINGS END ---
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -136,8 +146,6 @@ CSRF_TRUSTED_ORIGINS = [
 
 # === PRODUCTION COOKIE SETTINGS ===
 # Kyunki Railway aur Vercel dono HTTPS use karte hain, ye settings zaroori hain
-# Taki Frontend (Vercel) Backend (Railway) se baat kar sake.
-
 SESSION_COOKIE_SECURE = True      # HTTPS only
 CSRF_COOKIE_SECURE = True         # HTTPS only
 SESSION_COOKIE_SAMESITE = 'None'  # Cross-site allow karein

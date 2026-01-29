@@ -202,7 +202,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-your-secret-key-here'
 # IMPORTANT: Set DEBUG = True locally for development
 DEBUG = True  # ← Change this to True for local dev (admin CSS will work)
 
-ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1', 'localhost']  # Safe for local + Railway
+ALLOWED_HOSTS = ['*'] # Safe for local + Railway
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -314,3 +314,4 @@ SESSION_COOKIE_SECURE = False  # ← False locally (True only in prod HTTPS)
 CSRF_COOKIE_SECURE = False     # ← False locally
 SESSION_COOKIE_SAMESITE = 'Lax'  # 'None' only for prod cross-site
 CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
